@@ -1,0 +1,28 @@
+# Ignorar el entorno virtual
+venv/
+.env
+
+# Ignorar archivos de Python generados automáticamente
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.py,cover
+
+# Ignorar archivos de configuración local
+*.ini
+*.cfg
+*.conf
+
+# Ignorar archivos de salida o temporales
+output_images/
+images_temp/
+*.cbz
+
+# Ignorar archivos de IDE
+.vscode/
+.idea/
+
+# Ignorar archivos de sistema
+.DS_Store
+Thumbs.db
