@@ -1,0 +1,17 @@
+[bumpver]
+current_version = "0.1.0"
+version_pattern = "MAJOR.MINOR.PATCH"
+commit_message = "bump version {old_version} -> {new_version}"
+tag_message = "{new_version}"
+tag_scope = "global"
+
+[bumpver.file_patterns]
+"pyproject.toml" = [
+    'version = "{version}"',
+]
+"cbz_convert/cli/__init__.py" = [
+    '__version__ = "{version}"',
+]
+"cbz_convert/cli/version.py" = [
+    '__version__ = "{version}"',
+]
