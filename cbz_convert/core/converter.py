@@ -6,13 +6,14 @@ from tqdm import tqdm
 from PIL import Image
 
 class PDFtoCBZConverter:
-    def __init__(self, pdf_path, output_folder="images_temp", quality=85):
+    def __init__(self, pdf_path: str, output_folder: str = "images_temp", quality: int = 85):
         """
         Inicializa el conversor de PDF a CBZ.
         
-        :param pdf_path: Ruta al archivo PDF.
-        :param output_folder: Carpeta temporal para guardar las imágenes.
-        :param quality: Calidad de compresión para imágenes JPG (1-100).
+        Args:
+            pdf_path (str): Ruta al archivo PDF.
+            output_folder (str): Carpeta temporal para guardar las imágenes.
+            quality (int): Calidad de compresión para imágenes JPG (1-100).
         """
         if not os.path.exists(pdf_path):
             raise FileNotFoundError(f"El archivo PDF no existe: {pdf_path}")
@@ -25,18 +26,22 @@ class PDFtoCBZConverter:
             os.path.splitext(os.path.basename(pdf_path))[0] + ".cbz"
         )
 
-    def _pdf_to_images(self, format="jpg"):
+    def _pdf_to_images(self, format: str = "jpg"):
         """
         Convierte un PDF a imágenes (JPG o PNG).
         
-        :param format: Formato de salida de las imágenes ("jpg" o "png").
+        Args:
+            format (str): Formato de salida de las imágenes ("jpg" o "png").
         """
         # Abre el archivo PDF
         pdf_document = fitz.open(self.pdf_path)
+        print(f"Directorio contendor: {self.pdf_path}")
         
         # Crea la carpeta de salida si no existe
         if not os.path.exists(self.output_folder):
             os.makedirs(self.output_folder)
+            print(f"Creando carpeta de salida: {self.output_folder}")
+        
         
         # Itera sobre cada página del PDF
         for page_number in range(len(pdf_document)):
@@ -62,6 +67,7 @@ class PDFtoCBZConverter:
         """
         Comprime las imágenes en un archivo CBZ.
         """
+        print(f"Creando archivo CBZ: {self.cbz_path}")
         with zipfile.ZipFile(self.cbz_path, 'w') as cbz_file:
             for image_name in sorted(os.listdir(self.output_folder)):
                 if image_name.endswith(('.jpg', '.png')):  # Acepta JPG y PNG
@@ -75,11 +81,12 @@ class PDFtoCBZConverter:
         if os.path.exists(self.output_folder):
             shutil.rmtree(self.output_folder)
 
-    def convert_to_cbz(self, format="jpg"):
+    def convert_to_cbz(self, format: str = "jpg"):
         """
         Convierte un PDF a CBZ.
         
-        :param format: Formato de salida de las imágenes ("jpg" o "png").
+        Args:
+            format (str): Formato de salida de las imágenes ("jpg" o "png").
         """
         try:
             # Convierte el PDF a imágenes
@@ -95,9 +102,15 @@ class PDFtoCBZConverter:
             self._cleanup()
 
     @staticmethod
-    def convert_folder_to_cbz(folder_path, output_folder="images_temp", quality=85, format="jpg"):
+    def convert_folder_to_cbz(folder_path: str, output_folder: str = "images_temp", quality: int = 85, format: str = "jpg"):
         """
         Convierte todos los PDFs en una carpeta y sus subcarpetas a CBZ.
+
+        Args:
+            folder_path (str): Ruta a la carpeta que contiene los PDFs.
+            output_folder (str): Carpeta temporal para guardar las imágenes.
+            quality (int): Calidad de compresión para imágenes JPG (1-100).
+            format (str): Formato de salida de las imágenes ("jpg" o "png").
         """
         # Recopila todos los archivos PDF
         pdf_files = []
