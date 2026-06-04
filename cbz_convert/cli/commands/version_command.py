@@ -24,6 +24,6 @@ def show_version(console: Console) -> None:
     table.add_row("Versión", f"[bold]{__version__}[/bold]")
     table.add_row("Author", "Gabriel Baute")
     table.add_row("License", "MIT")
-    table.add_row("Repo", "https://github.com/gabrielbaute/cbz-converter")
+    table.add_row("Repo", "https://github.com/gabrielbaute/pdf-to-cbz-converter")
 
     console.print(table)
