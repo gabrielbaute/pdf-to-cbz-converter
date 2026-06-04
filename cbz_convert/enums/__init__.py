@@ -1,1 +1,2 @@
 from cbz_convert.enums.format_enum import Format
+from cbz_convert.enums.progress_stage_enum import ProgressStage
