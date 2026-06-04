@@ -2,6 +2,7 @@ import os
 import shutil
 import zipfile
 import fitz
+import logging
 from tqdm import tqdm
 from PIL import Image
 
@@ -21,6 +22,7 @@ class PDFtoCBZConverter:
         self.pdf_path = pdf_path
         self.output_folder = output_folder
         self.quality = quality
+        self.logger = logging.getLogger(self.__class__.__name__)
         self.cbz_path = os.path.join(
             os.path.dirname(pdf_path),
             os.path.splitext(os.path.basename(pdf_path))[0] + ".cbz"
@@ -35,12 +37,12 @@ class PDFtoCBZConverter:
         """
         # Abre el archivo PDF
         pdf_document = fitz.open(self.pdf_path)
-        print(f"Directorio contendor: {self.pdf_path}")
+        self.logger.info(f"Directorio contendor: {self.pdf_path}")
         
         # Crea la carpeta de salida si no existe
         if not os.path.exists(self.output_folder):
             os.makedirs(self.output_folder)
-            print(f"Creando carpeta de salida: {self.output_folder}")
+            self.logger.info(f"Creando carpeta de salida: {self.output_folder}")
         
         
         # Itera sobre cada página del PDF
@@ -67,7 +69,7 @@ class PDFtoCBZConverter:
         """
         Comprime las imágenes en un archivo CBZ.
         """
-        print(f"Creando archivo CBZ: {self.cbz_path}")
+        self.logger.info(f"Creando archivo CBZ: {self.cbz_path}")
         with zipfile.ZipFile(self.cbz_path, 'w') as cbz_file:
             for image_name in sorted(os.listdir(self.output_folder)):
                 if image_name.endswith(('.jpg', '.png')):  # Acepta JPG y PNG
@@ -79,6 +81,7 @@ class PDFtoCBZConverter:
         Elimina la carpeta temporal de imágenes.
         """
         if os.path.exists(self.output_folder):
+            self.logger.info(f"Eliminando carpeta de salida: {self.output_folder}")
             shutil.rmtree(self.output_folder)
 
     def convert_to_cbz(self, format: str = "jpg"):
