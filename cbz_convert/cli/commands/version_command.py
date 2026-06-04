@@ -12,7 +12,7 @@ def show_version(console: Console) -> None:
     """
     console = Console()
     table = Table(
-        title="[bold magenta]anime-light[/bold magenta]",
+        title="[bold magenta]CBZConferter[/bold magenta]",
         show_header=False,
         border_style="blue",
         padding=(0, 2),

@@ -12,6 +12,6 @@ tag_scope = "global"
 "cbz_convert/__init__.py" = [
     '__version__ = "{version}"',
 ]
-"cbz_convert/cli/version.py" = [
+"cbz_convert/cli/commands/version_command.py" = [
     '__version__ = "{version}"',
 ]
