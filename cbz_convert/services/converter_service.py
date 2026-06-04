@@ -58,34 +58,45 @@ class ConverterService:
         self.logger.debug(f"Cargando página {page_number}...")
         return document.load_page(page_number)
     
-    def _collect_images(self, document: Document) -> List[Image.Image]:
+    def _collect_images(self, document: Document, progress_callback: Optional[callable] = None) -> List[Image.Image]:
         """
         Colecta las imágenes de un documento PDF.
 
         Args:
             document (Document): El documento PDF.
-
+            progress_callback (Optional[callable]): Callback para actualizar el progreso. Función que recibe (página_actual, total_páginas).
+        
         Returns:
             List[Image.Image]: Lista de imágenes.
         """
         images = []
         pages = len(document)
         self.logger.info(f"Número de páginas a analizar: {pages}")
+
         for page_number in range(pages):
             page = self._load_page(document, page_number)
             pix = page.get_pixmap()
             image = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
             images.append(image)
+
+            if progress_callback:
+                progress_callback(page_number + 1, pages)
+
         self.logger.info(f"Imágenes recopiladas: {len(images)}")
         return images
     
-    def convert_pdf_to_cbz(self, format: Format = Format.JPEG, quality: Optional[int] = 85) -> bool:
+    def convert_pdf_to_cbz(
+            self, 
+            format: Format = Format.JPEG, 
+            quality: Optional[int] = 85,
+            progress_callback: Optional[callable] = None
+        ) -> bool:
         """
-        Convierte un PDF a CBZ.
-
+        Convierte un archivo de PDF a CBZ.
         Args:
             format (Format): El formato de salida de las imágenes.
             quality (Optional[int]): Calidad de compresión para imágenes JPG (1-100).
+            progress_callback (Optional[callable]): Callback para actualizar el progreso. Función que recibe (página_actual, total_páginas).
 
         Returns:
             bool: True si la conversión fue exitosa, False en caso contrario.
@@ -97,12 +108,17 @@ class ConverterService:
         
         try:
             document = self._load_document()
-            images = self._collect_images(document)
+            images = self._collect_images(document, progress_callback)
             with ZipFile(cbz_output, 'w') as cbz_file:
                 for i, image in enumerate(images):
                     image_path = self.temp_folder / f"page_{i + 1}.{format.value}"
                     image.save(image_path, format=format.value, quality=quality)
                     cbz_file.write(image_path, arcname=f"page_{i + 1}.{format.value}")
+
+                    # Actualizamos el progreso después de guardar cada imagen
+                    if progress_callback:
+                        progress_callback(i + 1, len(images), stage="saving")
+                    
             shutil.rmtree(self.temp_folder)
             return True
         except Exception as e:
