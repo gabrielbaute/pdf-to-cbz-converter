@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cbz-converter"
-version = "0.2.0"
+version = "0.3.0"
 description = "A python based pdf-cbz converter"
 authors = ["Gabriel Baute <gabrielbaute@gmail.com>"]
 license = "MIT"

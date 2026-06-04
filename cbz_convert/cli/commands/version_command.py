@@ -4,7 +4,7 @@ Version command for the CLI.
 from rich.console import Console
 from rich.table import Table
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 def show_version(console: Console) -> None:
     """
